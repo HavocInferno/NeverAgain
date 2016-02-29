@@ -10,6 +10,7 @@ public class Character : MonoBehaviour {
 
     public GameObject deathEffect;
     public GameObject hitEffect;
+    public float maxVel = 35.0f;
 
 	// Use this for initialization
 	void Start () {
@@ -42,12 +43,19 @@ public class Character : MonoBehaviour {
         }
     }
 
+    void Update()
+    {
+        if(rb.velocity.magnitude > maxVel)
+            rb.velocity = rb.velocity.normalized * maxVel;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Ground"))
         {
             Instantiate(deathEffect, transform.position, Quaternion.identity);
-        } else
+            //TODO: make dead and shit
+        } else if(!other.CompareTag("Pickup"))
         {
             Instantiate(hitEffect, transform.position, Quaternion.identity);
         }
