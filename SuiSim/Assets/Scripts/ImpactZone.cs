@@ -13,6 +13,7 @@ public class ImpactZone : MonoBehaviour {
             float factor = impactVel.magnitude;
             GameData.Instance.score += baseScore * (int)factor * GameData.Instance.overkillMulti;
             this.GetComponent<BoxCollider>().enabled = false;
+            other.gameObject.GetComponent<Character>().killThis();
             Debug.Log("Score: " + GameData.Instance.score);
         }
     }

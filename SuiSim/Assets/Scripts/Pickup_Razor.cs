@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PickupRazor : Pickup {
+public class Pickup_Razor : Pickup {
 
     public float dmg = 5.0f;
     public int baseScore = 10;
@@ -10,6 +10,6 @@ public class PickupRazor : Pickup {
     {
         GameData.Instance.health -= dmg;
         GameData.Instance.score += baseScore * GameData.Instance.overkillMulti;
-        //Debug.Log("Score: " + GameData.Instance.score);
+        Debug.Log("HP: " + GameData.Instance.health);
     }
 }
