@@ -10,6 +10,6 @@ public class PickupRazor : Pickup {
     {
         GameData.Instance.health -= dmg;
         GameData.Instance.score += baseScore * GameData.Instance.overkillMulti;
-        Debug.Log("Score: " + GameData.Instance.score);
+        //Debug.Log("Score: " + GameData.Instance.score);
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Pickup : MonoBehaviour {
 
-    public PackSize packSize = PackSize.MEDIUM;
+    //public PackSize packSize = PackSize.MEDIUM;
     public GameObject onDeath;
 
     public enum PackSize
