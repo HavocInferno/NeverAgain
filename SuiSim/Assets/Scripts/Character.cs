@@ -21,6 +21,8 @@ public class Character : MonoBehaviour {
 
     private bool dead = false;
 
+    public AudioSource wind, impact;
+
 	// Use this for initialization
 	void Start () {
         rb = gameObject.GetComponent<Rigidbody>();
@@ -30,28 +32,15 @@ public class Character : MonoBehaviour {
         GameData.Instance.overkillMulti = 1;
         GameData.Instance.score = 0;
         GameData.Instance.health = 100.0f;
+
+        StartCoroutine(overdoseDecay());
 	}
 	
 	// Update is called once per frame
 	void FixedUpdate () {
         if (!dead)
         {
-            if (Input.GetButton("Forward"))
-            {
-                rb.AddForce(directions.forward * thrust, ForceMode.Impulse);
-            }
-            if (Input.GetButton("Backward"))
-            {
-                rb.AddForce(-directions.forward * thrust, ForceMode.Impulse);
-            }
-            if (Input.GetButton("Left"))
-            {
-                rb.AddForce(-directions.right * thrust, ForceMode.Impulse);
-            }
-            if (Input.GetButton("Right"))
-            {
-                rb.AddForce(directions.right * thrust, ForceMode.Impulse);
-            }
+            rb.AddForce((directions.forward * Input.GetAxis("Vertical") + directions.right * Input.GetAxis("Horizontal")) * thrust, ForceMode.Impulse);
         }
     }
 
@@ -76,7 +65,14 @@ public class Character : MonoBehaviour {
 
         gameObject.GetComponent<AudioSource>().volume = gameObject.GetComponent<Rigidbody>().velocity.magnitude / maxVel;
     }
-
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.relativeVelocity.magnitude > 0.2f * maxVel)
+        {
+            SoundManager.playRandSound(impact,SoundManager.Instance.impact);
+            //Debug.Log("Eichel");
+        }
+    }
     void OnTriggerEnter(Collider other)
     {
         if(other.CompareTag("Ground"))
@@ -148,6 +144,16 @@ public class Character : MonoBehaviour {
         fadeOut = false;
         odEffect = false;
         Camera.main.GetComponent<VignetteAndChromaticAberration>().chromaticAberration = 2.0f;
+    }
+
+    IEnumerator overdoseDecay()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(2.0f);
+            if (!odEffect && GameData.Instance.overdose > 0)
+                GameData.Instance.overdose--;
+        }
     }
 
     public void killThis()

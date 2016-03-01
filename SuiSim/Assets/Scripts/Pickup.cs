@@ -5,6 +5,7 @@ public class Pickup : MonoBehaviour {
 
     //public PackSize packSize = PackSize.MEDIUM;
     public GameObject onDeath;
+    public float fallVel = 45.0f;
 
     public enum PackSize
     {
@@ -13,9 +14,20 @@ public class Pickup : MonoBehaviour {
         LARGE
     }
 
+    void Update()
+    {
+        if(transform.position.y > 0)
+        {
+            transform.Translate(Vector3.down * fallVel * Time.deltaTime);
+        } else
+        {
+            Destroy(this.gameObject);
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             Consume(other.gameObject);
 
