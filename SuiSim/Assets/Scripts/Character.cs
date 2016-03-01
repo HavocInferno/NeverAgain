@@ -70,7 +70,6 @@ public class Character : MonoBehaviour {
         if (col.relativeVelocity.magnitude > 0.2f * maxVel)
         {
             SoundManager.playRandSound(impact,SoundManager.Instance.impact);
-            //Debug.Log("Eichel");
         }
     }
     void OnTriggerEnter(Collider other)
@@ -87,13 +86,11 @@ public class Character : MonoBehaviour {
                 
             }
             SoundManager.playRandSound(penice.GetComponents<AudioSource>()[3], SoundManager.Instance.brain);
-            
             //TODO: make dead and shit
-        } else if(!other.CompareTag("Pickup") && !other.CompareTag("Impact"))
+        } /*else if(!other.CompareTag("Pickup") && !other.CompareTag("Impact"))
         {
-            GameObject penice = (GameObject)Instantiate(hitEffect, transform.position, Quaternion.identity);
-            SoundManager.playRandSound(penice.GetComponent<AudioSource>(), SoundManager.Instance.glass);
-        }
+            Instantiate(EffectManager.Instance.glass, transform.position, Quaternion.identity);
+        }*/
     }
 
     public void DoOverdose(int od, float heal)
