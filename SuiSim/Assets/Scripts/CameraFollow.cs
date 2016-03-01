@@ -38,7 +38,7 @@ public class CameraFollow : MonoBehaviour {
             float factor = followedObject.gameObject.GetComponent<Rigidbody>().velocity.magnitude / followedObject.GetComponent<Character>().maxVel;
             angleX = factor * Random.Range(-0.3f, 0.3f);
             angleZ = factor * Random.Range(-0.3f, 0.3f);
-            yield return new WaitForSeconds(Random.Range(0.01f, 0.05f));
+            yield return new WaitForSeconds(Random.Range(0.1f, 0.05f));
         }
     }
 }

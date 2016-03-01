@@ -6,7 +6,7 @@ using System.Collections;
 public class ClampSpeed : MonoBehaviour {
     Rigidbody rb;
     AudioSource bone, impact;
-    static float maxspeed = 60.0f;
+    static float maxspeed = 60f;
     public bool head;
     // Update is called once per frame
     void Start()
@@ -14,8 +14,13 @@ public class ClampSpeed : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         bone = GetComponents<AudioSource>()[0];
         impact = GetComponents<AudioSource>()[1];
+		rb.interpolation = RigidbodyInterpolation.Interpolate;
+		if (head) {
+			StartCoroutine(jump ());
+		}
     }
 	void FixedUpdate () {
+		rb.velocity = rb.velocity - Vector3.up * rb.velocity.y *(0.2f*Time.fixedDeltaTime);
         if (rb.velocity.magnitude > maxspeed)
             rb.velocity = rb.velocity.normalized * maxspeed;
 	}
@@ -38,4 +43,9 @@ public class ClampSpeed : MonoBehaviour {
         }
         
     }
+	IEnumerator jump()
+	{
+		yield return new WaitForSeconds (0.5f);
+		rb.AddForce (transform.up * 100, ForceMode.Impulse);
+	}
 }
