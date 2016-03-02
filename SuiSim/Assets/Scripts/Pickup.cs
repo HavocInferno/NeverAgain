@@ -3,26 +3,28 @@ using System.Collections;
 
 public class Pickup : MonoBehaviour {
 
-    //public PackSize packSize = PackSize.MEDIUM;
     public GameObject onDeath;
-    public float fallVel = 45.0f;
+    //public float fallVel = 15.0f;
+    private float angleY = 0.0f;
+    public Vector3 turnAxis = Vector3.up;
+    public float spawnWeight = 1.0f;
 
-    public enum PackSize
+    void Start()
     {
-        SMALL,
-        MEDIUM,
-        LARGE
+        angleY = 5.0f * Random.Range(-1.0f, 1.0f);
     }
 
     void Update()
     {
         if(transform.position.y > 0)
         {
-            transform.Translate(Vector3.down * fallVel * Time.deltaTime);
+            transform.Translate(Vector3.down * 0.5f*Character.playerVel * Time.deltaTime, Space.World);
         } else
         {
             Destroy(this.gameObject);
         }
+
+        transform.Rotate(turnAxis, angleY);
     }
 
     void OnTriggerEnter(Collider other)
@@ -34,7 +36,7 @@ public class Pickup : MonoBehaviour {
             Instantiate(onDeath, transform.position, Quaternion.identity);
 
             this.gameObject.GetComponent<Collider>().enabled = false;
-            this.gameObject.GetComponent<Renderer>().enabled = false;
+            //this.gameObject.GetComponent<Renderer>().enabled = false;
 
             Destroy(this.gameObject);
         }

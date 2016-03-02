@@ -25,32 +25,49 @@ public class GameData {
     }
 
     //player
+    private bool Dead;
+    public bool dead
+    {
+        get { return Dead; }
+        set { Dead = value; if (Dead) { health = 0f; } }
+    }
+
     private float HP;
     public float health
     {
         get { return HP; }
-        set { HP = value; }
+        set { HP = value; while (HP <= 0 && !Dead) { HP += 100.0f; overkillMulti++; }; GameUI.UIes.health = (int)(HP * 10.0f); }
     }
 
     private int Score;
     public int score
     {
         get { return Score; }
-        set { Score = value; }
+        set { Score = Mathf.Max(value,0); GameUI.UIes.Score = Score; }
     }
 
-    private int okM;
+    private int okM=1;
+    private int odM=1;
     public int overkillMulti
     {
         get { return okM; }
-        set { okM = value; }
+        set { okM = value; GameUI.UIes.Multi = okM*odM; }
+    }
+    public int Multi
+    {
+        get { return okM * odM; }
+    }
+    public int overDoseMulti
+    {
+        get { return odM; }
+        set { odM = value; GameUI.UIes.Multi = okM*odM; }
     }
 
     private int Overdose;
     public int overdose
     {
         get { return Overdose; }
-        set { Overdose = value; }
+        set { Overdose = value; GameUI.UIes.Overdose = Overdose; }
     }
 
     public class highscoreEntry
@@ -58,7 +75,7 @@ public class GameData {
         public string name = "";
         public int score = 0;
     }
-    private highscoreEntry[] Highscores = new highscoreEntry[10];
+    private highscoreEntry[] Highscores = new highscoreEntry[5];
     public highscoreEntry[] highscores
     {
         get { return Highscores; }

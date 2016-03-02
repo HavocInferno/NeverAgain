@@ -8,8 +8,8 @@ public class Pickup_Razor : Pickup {
 
 	public override void Consume(GameObject player)
     {
-        GameData.Instance.health -= dmg;
         GameData.Instance.score += baseScore * GameData.Instance.overkillMulti;
+        GameData.Instance.health -= dmg;
         Debug.Log("HP: " + GameData.Instance.health);
     }
 }

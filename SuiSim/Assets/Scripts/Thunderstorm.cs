@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(AudioSource))]
 public class Thunderstorm : MonoBehaviour {
 
     //TODO: missing rain, thunder, clouds
@@ -22,6 +23,7 @@ public class Thunderstorm : MonoBehaviour {
         while (true)
         {
             yield return new WaitForSeconds(Random.Range(minMaxInterval.x, minMaxInterval.y));
+
             for (int i = 0; i < Random.Range(1, maxBurst); i++)
             {
                 float tmpIntensity = dirLight.intensity;
@@ -33,6 +35,7 @@ public class Thunderstorm : MonoBehaviour {
                 dirLight.color = tmpClr;
                 yield return new WaitForSeconds(flashDuration);
             }
+            SoundManager.playRandSound(gameObject.GetComponent<AudioSource>(), SoundManager.Instance.thunder);
         }
     }
 }

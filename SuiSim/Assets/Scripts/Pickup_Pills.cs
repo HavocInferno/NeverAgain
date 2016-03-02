@@ -9,7 +9,7 @@ public class Pickup_Pills : Pickup {
 
     public override void Consume(GameObject player)
     {
-        player.GetComponent<Character>().DoOverdose(overdose, heal);
+        Character.playerInstance.DoOverdose(overdose, heal);
         GameData.Instance.score += baseScore * GameData.Instance.overkillMulti;
         Debug.Log("OD: " + GameData.Instance.overdose + "; HP: " + GameData.Instance.health);
     }
