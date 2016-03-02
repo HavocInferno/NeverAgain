@@ -156,5 +156,27 @@ public class Character : MonoBehaviour {
     public void killThis()
     {
         dead = true;
+        GameData.highscoreEntry[] hscores = GameData.Instance.highscores;
+        sortHighscores(hscores);
+        if(hscores[hscores.Length-1].score < GameData.Instance.score)
+        {
+            //enter new score there and prompt for name...
+        }
+    }
+
+    private void sortHighscores(GameData.highscoreEntry[] hs)
+    {
+        for(int i = 0; i < hs.Length; i++)
+        {
+            for(int j = 0; j < hs.Length; j++)
+            {
+                if(hs[j].score > hs[i].score)
+                {
+                    GameData.highscoreEntry tmp = hs[i];
+                    hs[i] = hs[j];
+                    hs[j] = tmp;
+                }
+            }
+        }
     }
 }

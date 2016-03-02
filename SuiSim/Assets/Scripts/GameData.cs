@@ -52,4 +52,16 @@ public class GameData {
         get { return Overdose; }
         set { Overdose = value; }
     }
+
+    public class highscoreEntry
+    {
+        public string name = "";
+        public int score = 0;
+    }
+    private highscoreEntry[] Highscores = new highscoreEntry[10];
+    public highscoreEntry[] highscores
+    {
+        get { return Highscores; }
+        set { Highscores = value; }
+    }
 }
