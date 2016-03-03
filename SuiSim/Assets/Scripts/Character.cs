@@ -37,6 +37,7 @@ public class Character : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+        StartCoroutine(start());
         rb = gameObject.GetComponent<Rigidbody>();
         if (statdir == null)
             statdir = directions;
@@ -49,14 +50,18 @@ public class Character : MonoBehaviour {
         bloomF = Camera.main.GetComponent<BloomAndFlares>();
         colCorr = Camera.main.GetComponent<ColorCorrectionCurves>();
 
-        GameData.Instance.reset();
+        
 
         GameData.Instance.dead = false;
         Camera.main.GetComponent<CameraFollow>().setFollow(gameObject.transform);
 
         StartCoroutine(overdoseDecay());
 	}
-	
+    IEnumerator start()
+    {
+        GameData.Instance.state = GameData.GameState.Playing;
+        yield return new WaitForSeconds(GameData.Instance.StartDelay);
+    }
 	// Update is called once per frame
 	void FixedUpdate () {
         if (!GameData.Instance.dead)
@@ -97,9 +102,6 @@ public class Character : MonoBehaviour {
         if (col.other.CompareTag("Ground"))
         {
             float factor = col.relativeVelocity.y;
-            Debug.Log("Penus " + factor);
-            Debug.Log("Penus2 " + playerInstance.rb.velocity.ToString());
-            Debug.Log("sdhsdjkg "+col.relativeVelocity.ToString());
             GameData.Instance.score += (int)(baseScore * factor) * GameData.Instance.Multi;
             GetComponent<BoxCollider>().enabled = false;
             killThis();
@@ -116,8 +118,10 @@ public class Character : MonoBehaviour {
 
             }
             SoundManager.playRandSound(penice.GetComponents<AudioSource>()[3], SoundManager.Instance.brain);
+            GameData.Instance.winLose();
         }
     }
+
 
     public void DoOverdose(int od, float heal)
     {
@@ -212,7 +216,7 @@ public class Character : MonoBehaviour {
         }*/
     }
 
-    private void sortHighscores(GameData.highscoreEntry[] hs)
+    private void sortHighscores(GameData.HighscoreEntry[] hs)
     {
         for(int i = 0; i < hs.Length; i++)
         {
@@ -220,7 +224,7 @@ public class Character : MonoBehaviour {
             {
                 if(hs[j].score > hs[i].score)
                 {
-                    GameData.highscoreEntry tmp = hs[i];
+                    GameData.HighscoreEntry tmp = hs[i];
                     hs[i] = hs[j];
                     hs[j] = tmp;
                 }

@@ -9,8 +9,6 @@ public class Helicock : MonoBehaviour {
     public AudioSource source;
 	// Use this for initialization
 	void Start () {
-        transform.position = new Vector3(minPos.x + Random.value * (maxPos.x - minPos.x), minPos.y + Random.value * (maxPos.y - minPos.y), minPos.z + Random.value * (maxPos.z - minPos.z));
-        source.loop = true;
         StartCoroutine(start());
 	}
 	
@@ -43,6 +41,14 @@ public class Helicock : MonoBehaviour {
     {
         yield return new WaitForSeconds(0.1f);
         SoundManager.playRandSound(source, SoundManager.Instance.heli);
+        GameData.Instance.choppaz.Add(this);
+        transform.position = new Vector3(minPos.x + Random.value * (maxPos.x - minPos.x), minPos.y + Random.value * (maxPos.y - minPos.y), minPos.z + Random.value * (maxPos.z - minPos.z));
+        source.loop = true;
+        active = true;
 
+    }
+    public void reset()
+    {
+        StartCoroutine(start());
     }
 }

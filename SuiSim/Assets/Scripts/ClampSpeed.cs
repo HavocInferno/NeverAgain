@@ -26,21 +26,22 @@ public class ClampSpeed : MonoBehaviour {
 	}
     void OnCollisionEnter(Collision col)
     {
-        if(!col.other.CompareTag("Player"))
-        if (col.relativeVelocity.magnitude > 0.1f * maxspeed)
-            SoundManager.playRandSound(impact, SoundManager.Instance.impact);
 
-        if (col.relativeVelocity.magnitude > 0.3f * maxspeed)
-        {
-            Instantiate(EffectManager.Instance.blood, transform.position, transform.rotation);
-        }
-        if (col.relativeVelocity.magnitude > 0.6f * maxspeed)
-        {
-            if (head)
-                SoundManager.playRandSound(bone, SoundManager.Instance.brain);
-            else
-                SoundManager.playRandSound(bone, SoundManager.Instance.bone);
-        }
+            if (col.relativeVelocity.magnitude > 0.1f * maxspeed)
+                SoundManager.playRandSound(impact, SoundManager.Instance.impact);
+
+            if (col.relativeVelocity.magnitude > 0.3f * maxspeed)
+            {
+                Instantiate(EffectManager.Instance.blood, transform.position, transform.rotation);
+            }
+            if (col.relativeVelocity.magnitude > 0.6f * maxspeed)
+            {
+                if (head)
+                    SoundManager.playRandSound(bone, SoundManager.Instance.brain);
+                else
+                    SoundManager.playRandSound(bone, SoundManager.Instance.bone);
+            }
+        
         
     }
 	IEnumerator jump()

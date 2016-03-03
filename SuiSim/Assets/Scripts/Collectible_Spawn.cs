@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
-
 public class Collectible_Spawn : MonoBehaviour {
 
+    public static Collectible_Spawn i;
     private Vector3 lastPos;
     public Transform initPos;
     private Vector3 initP;
@@ -15,9 +15,22 @@ public class Collectible_Spawn : MonoBehaviour {
     public GameObject[] pickups;
     private int numPickups;
     private float[] weightRange;
+    private ArrayList list;
 
     // Use this for initialization
+    public void reset()
+    {
+        foreach(Object i in list)
+        {
+            Destroy((GameObject)i);
+        }
+        list = new ArrayList();
+        lastPos = new Vector3(initP.x, initP.y - 10, initP.z);
+        StartCoroutine(Spawn());
+    }
     void Start () {
+        i = this;
+        list = new ArrayList();
         initP = initPos.position;
         lastPos = new Vector3(initP.x, initP.y - 10, initP.z);
         numPickups = pickups.Length;
@@ -59,7 +72,7 @@ public class Collectible_Spawn : MonoBehaviour {
                     + Vector3.right * Random.Range(-spread, spread);
         for (int i = 0; i < num; i++)
         {
-            Instantiate(pickup, pos + i*dir, pickup.transform.rotation);
+            list.Add(Instantiate(pickup, pos + i*dir, pickup.transform.rotation));
         }
     }
 

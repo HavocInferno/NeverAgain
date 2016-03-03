@@ -6,6 +6,27 @@ public class GameData: MonoBehaviour {
     private static GameData instance;
     public GameObject playerPrefab;
     public Transform spawnPosition;
+    public enum GameState { MainMenu, Playing, Stats, Won, Lost };
+    [SerializeField]
+    private GameObject playerMuppet;
+    private GameState State;
+    private bool first = true;
+    [SerializeField]
+    private GameObject firstplayer;
+    public GameState state
+    {
+        get { return State; }
+        set {
+            Debug.Log(UnityEngine.StackTraceUtility.ExtractStackTrace() + " "+ value.ToString());
+            if (State == GameState.Playing)
+                playerMuppet.SetActive(true);
+            State = value;
+            if (State == GameState.Playing)
+                playerMuppet.SetActive(false);
+        }
+    }
+    public ArrayList choppaz = new ArrayList();
+    public float StartDelay;
 
     private GameData()
     {
@@ -13,6 +34,7 @@ public class GameData: MonoBehaviour {
             return;
 
         instance = this;
+        state = GameState.MainMenu;
     }
 
     public static GameData Instance
@@ -53,7 +75,14 @@ public class GameData: MonoBehaviour {
     public int overkillMulti
     {
         get { return okM; }
-        set { okM = value; GameUI.UIes.Multi = okM*odM; }
+        set { okM = value; 
+            GameUI.UIes.Multi = okM*odM;
+            if (value > 1)
+            {
+                GameUI.UIes.OverKillText.transform.localScale = new Vector3(2, 2, 2);
+                GameUI.UIes.OverKillText.SetActive(true);
+            }
+        }
     }
     public int Multi
     {
@@ -72,13 +101,13 @@ public class GameData: MonoBehaviour {
         set { Overdose = value; GameUI.UIes.Overdose = Overdose; }
     }
 
-    public class highscoreEntry
+    public class HighscoreEntry
     {
         public string name = "";
         public int score = 0;
     }
-    private highscoreEntry[] Highscores = new highscoreEntry[5];
-    public highscoreEntry[] highscores
+    private HighscoreEntry[] Highscores = new HighscoreEntry[5];
+    public HighscoreEntry[] highscores
     {
         get { return Highscores; }
         set { Highscores = value; }
@@ -86,18 +115,50 @@ public class GameData: MonoBehaviour {
 
     public void spawnPlayer()
     {
-        Character.playerInstance.enabled = false;
-        Instantiate(playerPrefab, spawnPosition.position, Quaternion.identity);
+        if (first)
+        {
+            first = false;
+            firstplayer.SetActive(true);
+        }
+        else
+        {
+            Destroy(Character.playerInstance);
+            Instantiate(playerPrefab, spawnPosition.position, spawnPosition.rotation);
+        }
+        reset();
     }
     public void reset()
-        {
+    {
+        state = GameState.Playing;
         dead = false;
-        GameData.Instance.overkillMulti = 1;
-        GameData.Instance.score = 0;
-        GameData.Instance.health = 100.0f;
+        overkillMulti = 1;
+        score = 0;
+        health = 100.0f;
         overDoseMulti = 1;
         overkillMulti = 1;
         overdose = 0;
+        Collectible_Spawn.i.reset();
+        foreach (Object i in choppaz)
+            ((Helicock)i).reset();
 
+    }
+    public void showScoreboard()
+    {
+        state = GameState.Stats;
+    }
+    public void endGame()
+    {
+        //EndGame;
+    }
+    public void winLose()
+    {
+        if (score > 0)
+            state = GameState.Won;
+        else
+            state = GameState.Lost;
+    }
+    public void leaveScoreBoard()
+    {
+        state = GameState.MainMenu;
     }
 }
