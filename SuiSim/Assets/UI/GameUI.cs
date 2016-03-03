@@ -37,7 +37,7 @@ public class GameUI : MonoBehaviour {
         OverdoseBool = false;
         textsize = score1.fontSize;
         // StartCoroutine(testicle());
-        test();
+        //test();
         UIes = this;
     }
 
@@ -178,7 +178,13 @@ public class GameUI : MonoBehaviour {
     {
         for(int i = 0; i < 5; i++)
         {
-            Highscores[i].text = (i + 1) + ". " + entries[i].name + "\t" + entries[i].score;
+            if (entries[i] != null)
+            {
+                Highscores[i].text = (i + 1) + ". " + entries[i].name + "\t" + entries[i].score;
+            } else
+            {
+                Highscores[i].text = (i + 1) + ". " + "-" + "\t" + "-";
+            }
         }
     }
 
@@ -218,6 +224,9 @@ public class GameUI : MonoBehaviour {
         newScore.name = winName.text;
         newScore.score = GameData.Instance.score;
         // Add Penis
+        GameData.Instance.highscores = pushHighscore(GameData.Instance.highscores, newScore);
+        setHighscore(GameData.Instance.highscores);
+
         Debug.Log("HighscoreEntry: " + newScore.name + " " + newScore.score);
         GameData.Instance.state = GameData.GameState.MainMenu;
     }
@@ -228,8 +237,72 @@ public class GameUI : MonoBehaviour {
         newScore.score = GameData.Instance.score;
         Debug.Log("HighscoreEntry: "+ newScore.name +" "+newScore.score);
         // Add Penis
-        
+        GameData.Instance.highscores = pushHighscore(GameData.Instance.highscores, newScore);
+        setHighscore(GameData.Instance.highscores);
+
         GameData.Instance.state = GameData.GameState.MainMenu;
+    }
+
+    private void sortHighscores(GameData.HighscoreEntry[] input)
+    {
+        bool unsorted = true;
+
+        while(unsorted)
+        {
+            unsorted = false;
+            for (int i = 0; i < 4; i++)
+            {
+                if (input[i] != null)
+                {
+                    if (input[i + 1] != null)
+                    {
+                        if (input[i].score < input[i + 1].score)
+                        {
+                            unsorted = true;
+                            GameData.HighscoreEntry tmpi = input[i];
+                            input[i] = input[i + 1];
+                            input[i + 1] = tmpi;
+                        }
+                    }
+                } else
+                {
+                    if (input[i + 1] != null)
+                    {
+                        unsorted = true;
+                        input[i] = input[i + 1];
+                        input[i + 1] = null;
+                    }
+                }
+            }
+        }
+    }
+
+    private GameData.HighscoreEntry[] pushHighscore(GameData.HighscoreEntry[] input, GameData.HighscoreEntry newHS)
+    {
+        bool fits = false; 
+        for(int i = 0; i < input.Length; i++)
+        {
+            if (input[i] != null)
+            {
+                if (input[i].score < newHS.score)
+                    fits = true;
+            } else
+            {
+                fits = true;
+            }
+        }
+
+        if(fits)
+        {
+            sortHighscores(input);
+            input[input.Length-1] = newHS;
+            sortHighscores(input);
+            return input;
+        } else
+        {
+            sortHighscores(input);
+            return input;
+        }
     }
 
     #region lesbuttones
