@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GameData {
+public class GameData: MonoBehaviour {
 
     private static GameData instance;
+    public GameObject playerPrefab;
+    public Transform spawnPosition;
 
     private GameData()
     {
@@ -80,5 +82,22 @@ public class GameData {
     {
         get { return Highscores; }
         set { Highscores = value; }
+    }
+
+    public void spawnPlayer()
+    {
+        Character.playerInstance.enabled = false;
+        Instantiate(playerPrefab, spawnPosition.position, Quaternion.identity);
+    }
+    public void reset()
+        {
+        dead = false;
+        GameData.Instance.overkillMulti = 1;
+        GameData.Instance.score = 0;
+        GameData.Instance.health = 100.0f;
+        overDoseMulti = 1;
+        overkillMulti = 1;
+        overdose = 0;
+
     }
 }

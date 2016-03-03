@@ -23,9 +23,10 @@ public class GameUI : MonoBehaviour {
     public static GameUI UIes;
     private int multi = 1;
     private int overdose;
+    public float switchspeed;
     // Use this for initialization
     void Start () {
-        imSpiel = true;
+        imSpiel = false;
         OverdoseBool = false;
         textsize = score1.fontSize;
        // StartCoroutine(testicle());
@@ -45,17 +46,20 @@ public class GameUI : MonoBehaviour {
         // Anzeige des menüs oder huds
         if (!imSpiel)
         {
-            hud.transform.position = Vector3.Lerp(hud.transform.position, hudPause.position, Time.deltaTime);
-            menu.transform.position = Vector3.Lerp(menu.transform.position, menuPause.position, Time.deltaTime);
-            menu.transform.rotation = Quaternion.Slerp(menu.transform.rotation, menuPause.rotation, Time.deltaTime);
-            scoreboard.transform.position = Vector3.Lerp(scoreboard.transform.position, scoreActive.position, Time.deltaTime);
+            hud.transform.position = Vector3.Lerp(hud.transform.position, hudPause.position, Time.deltaTime* switchspeed);
+            menu.transform.position = Vector3.Lerp(menu.transform.position, menuPause.position, Time.deltaTime * switchspeed);
+            menu.transform.rotation = Quaternion.Slerp(menu.transform.rotation, menuPause.rotation, Time.deltaTime * switchspeed);
+            scoreboard.transform.position = Vector3.Lerp(scoreboard.transform.position, scoreActive.position, Time.deltaTime * switchspeed);
         }
         if(imSpiel)
         {
-            hud.transform.position = Vector3.Lerp(hud.transform.position, hudGame.position, Time.deltaTime);
-            menu.transform.position = Vector3.Lerp(menu.transform.position, menuGame.position, Time.deltaTime);
-            scoreboard.transform.position = Vector3.Lerp(scoreboard.transform.position, scoreActive.position, Time.deltaTime);
+            hud.transform.position = Vector3.Lerp(hud.transform.position, hudGame.position, Time.deltaTime * switchspeed);
+            menu.transform.rotation = Quaternion.Slerp(menu.transform.rotation, menuGame.rotation, Time.deltaTime * switchspeed);
+            menu.transform.position = Vector3.Lerp(menu.transform.position, menuGame.position, Time.deltaTime * switchspeed);
+            scoreboard.transform.position = Vector3.Lerp(scoreboard.transform.position, scoreActive.position, Time.deltaTime * switchspeed);
         }
+        if (Input.GetButtonDown("Escape"))
+            imSpiel = !imSpiel;
 
 
     // Lebensbalken
@@ -155,4 +159,12 @@ public class GameUI : MonoBehaviour {
             overdose1.enabled = overdose2.enabled = overdoseBlood.enabled = overdoseBool;
         }
     }
+
+    #region lesbuttones
+    public void buttonstart()
+    {
+        imSpiel = true;
+        GameData.Instance.spawnPlayer();
+    }
+    #endregion
 }

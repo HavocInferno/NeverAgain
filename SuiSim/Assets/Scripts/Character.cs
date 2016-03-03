@@ -33,12 +33,15 @@ public class Character : MonoBehaviour {
     public ColorCorrectionCurves colCorr;
     Vector3 velocity;
     public float controllSmoothness;
+    public static Transform statdir;
 
 	// Use this for initialization
 	void Start () {
         rb = gameObject.GetComponent<Rigidbody>();
+        if (statdir == null)
+            statdir = directions;
         if (directions == null)
-            directions = gameObject.transform;
+            directions = statdir;
         initVolume = wind.volume;
         playerInstance = this;
 
@@ -46,9 +49,10 @@ public class Character : MonoBehaviour {
         bloomF = Camera.main.GetComponent<BloomAndFlares>();
         colCorr = Camera.main.GetComponent<ColorCorrectionCurves>();
 
-        GameData.Instance.overkillMulti = 1;
-        GameData.Instance.score = 0;
-        GameData.Instance.health = 100.0f;
+        GameData.Instance.reset();
+
+        GameData.Instance.dead = false;
+        Camera.main.GetComponent<CameraFollow>().setFollow(gameObject.transform);
 
         StartCoroutine(overdoseDecay());
 	}

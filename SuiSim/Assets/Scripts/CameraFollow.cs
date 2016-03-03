@@ -41,4 +41,9 @@ public class CameraFollow : MonoBehaviour {
             yield return new WaitForSeconds(Random.Range(0.1f, 0.05f));
         }
     }
+
+    public void setFollow(Transform penus)
+    {
+        followedObject = penus;
+    }
 }
