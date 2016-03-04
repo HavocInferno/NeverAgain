@@ -16,7 +16,7 @@ public class Pickup : MonoBehaviour {
 
     void Update()
     {
-        if(transform.position.y > 0)
+        if(transform.position.y > 0 && transform.position.y < Character.playerInstance.transform.position.y)
         {
             transform.Translate(Vector3.down * 0.5f*Character.playerVel * Time.deltaTime, Space.World);
         } else
