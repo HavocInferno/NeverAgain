@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using UnityStandardAssets.ImageEffects;
 
@@ -34,6 +34,7 @@ public class Character : MonoBehaviour {
     Vector3 velocity;
     public float controllSmoothness;
     public static Transform statdir;
+	public AudioSource ambientWind;
 
 	// Use this for initialization
 	void Start () {
@@ -56,6 +57,15 @@ public class Character : MonoBehaviour {
         Camera.main.GetComponent<CameraFollow>().setFollow(gameObject.transform);
 
         StartCoroutine(overdoseDecay());
+		StartCoroutine(ambientW());
+	}
+
+	IEnumerator ambientW()
+	{
+		while (true) {
+			yield return new WaitForSeconds (Random.Range (6.0f, 10.0f));
+			SoundManager.playRandSound(ambientWind, SoundManager.Instance.windgust);
+		}
 	}
     IEnumerator start()
     {
@@ -73,6 +83,7 @@ public class Character : MonoBehaviour {
 
     void Update()
     {
+		ambientWind.volume = Mathf.Clamp (transform.position.y / 3000, 0, 1);
         velocity = (directions.forward * Input.GetAxis("Vertical") + directions.right * Input.GetAxis("Horizontal")) * 40;
         if (rb.velocity.magnitude > maxVel)
             rb.velocity = rb.velocity.normalized * maxVel;
