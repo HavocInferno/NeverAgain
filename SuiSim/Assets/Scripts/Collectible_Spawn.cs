@@ -9,7 +9,8 @@ public class Collectible_Spawn : MonoBehaviour {
 
     public Vector3 minBound = new Vector3(-5.0f, -20.0f, 5.0f);
     public Vector3 maxBound = new Vector3(5.0f, -10.0f, 15.0f);
-    public float spread = 4.0f;
+    public float horzSpread = 1.0f;
+    public float vertSpread = 4.0f;
     public int maxInRow = 5;
 
     public GameObject[] pickups;
@@ -67,9 +68,9 @@ public class Collectible_Spawn : MonoBehaviour {
 
     void doLine(GameObject pickup, int num, Vector3 pos)
     {
-        Vector3 dir = Vector3.forward * Random.Range(-spread, spread) 
-                    + Vector3.up * Random.Range(-spread, spread) 
-                    + Vector3.right * Random.Range(-spread, spread);
+        Vector3 dir = Vector3.forward * Random.Range(-horzSpread, horzSpread) 
+                    + Vector3.up * Random.Range(-vertSpread, vertSpread) 
+                    + Vector3.right * Random.Range(-horzSpread, horzSpread);
         for (int i = 0; i < num; i++)
         {
             list.Add(Instantiate(pickup, pos + i*dir, pickup.transform.rotation));

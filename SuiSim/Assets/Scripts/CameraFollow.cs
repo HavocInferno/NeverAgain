@@ -53,6 +53,16 @@ public class CameraFollow : MonoBehaviour {
                 transform.rotation = Quaternion.Slerp(transform.rotation, spawnPosition.rotation, Time.deltaTime * smooth2);
                 GetComponent<Camera>().nearClipPlane = .1f;
             }
+            if (GameData.Instance.state == GameData.GameState.Stats)
+            {
+
+                smooth2 = 1.5f;
+                GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, menuFOV, Time.deltaTime * smooth2/4.0f);
+                transform.position = Vector3.Lerp(transform.position, spawnPosition.position, Time.deltaTime * smooth2 / 4.0f);
+                transform.rotation = Quaternion.Slerp(transform.rotation, spawnPosition.rotation, Time.deltaTime * smooth2 / 4.0f);
+                GetComponent<Camera>().nearClipPlane = .1f;
+            }
+
         }
         //transform.LookAt(followedObject);
     }

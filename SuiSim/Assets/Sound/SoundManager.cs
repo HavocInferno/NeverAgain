@@ -3,7 +3,7 @@ using System.Collections;
 
 public class SoundManager : MonoBehaviour {
     [SerializeField]
-    public AudioClip[] blood, brain, fart, glass, heli, airhorn, carhorn, bone, impact, plane, thunder, wind, environment, debis, windgust, overkill;
+    public AudioClip[] blood, brain, fart, glass, heli, airhorn, carhorn, bone, impact, plane, thunder, wind, environment, debis, windgust, overkill, overkillSpecial, cut;
     public static SoundManager Instance;
 	void Start () {
         Instance = this;

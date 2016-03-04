@@ -9,6 +9,8 @@ public class GameUI : MonoBehaviour {
     private int score;
     public int health;
     public Slider slides;
+    public Slider odSlides;
+    public GameObject odParts;
     private bool imSpiel, overdoseBool;
     public GameObject hud;
     public GameObject menu;
@@ -28,6 +30,7 @@ public class GameUI : MonoBehaviour {
     public float switchspeed;
     public InputField winName, loseName;
     public GameObject OverKillText;
+
     // Use this for initialization
     void Awake()
     {
@@ -46,7 +49,7 @@ public class GameUI : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         OverKillText.transform.localScale = Vector3.Lerp(OverKillText.transform.localScale, new Vector3(0.9f, 0.9f, 0.9f), Time.deltaTime*2);
-        if (OverKillText.transform.localScale.x <= 1)
+        if (OverKillText.transform.localScale.x <= 1 && !OverKillText.GetComponent<AudioSource>().isPlaying)
             OverKillText.SetActive(false);
         score1.fontSize = (int) Mathf.Lerp(score1.fontSize, textsize, Time.deltaTime * 10);
         score2.fontSize = score1.fontSize;
@@ -113,10 +116,9 @@ public class GameUI : MonoBehaviour {
             imSpiel = !imSpiel;
 
 
-    // Lebensbalken
-    slides.value = health;
-
-        // Overdose Anzeige
+        // Lebensbalken
+        slides.value = health;
+        odSlides.value = overdose;
     }
 
     // Testing
@@ -210,6 +212,13 @@ public class GameUI : MonoBehaviour {
         set
         {
             overdose = value;
+            if(overdose < 1)
+            {
+                odParts.SetActive(false);
+            } else
+            {
+                odParts.SetActive(true);
+            }
         }
     }
     public bool OverdoseBool {

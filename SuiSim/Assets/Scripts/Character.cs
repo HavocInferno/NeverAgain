@@ -5,7 +5,7 @@ using UnityStandardAssets.ImageEffects;
 [RequireComponent(typeof(Rigidbody))]
 public class Character : MonoBehaviour {
 
-    private Rigidbody rb;
+    public Rigidbody rb;
     public Transform directions;
     public float thrust = 1.0f;
 
@@ -14,7 +14,10 @@ public class Character : MonoBehaviour {
     public float maxVel = 35.0f;
 
     public float overdoseStepDur = 0.5f;
+    public int overdoseLossStep = 10;
+    public float overdoseHealthStep = 5.0f;
     public int overdoseThreshold = 100;
+    private bool isOverdosing = false;
     private bool odEffect = false;
         private bool fadeOut = false;
         private float fadeTarget = 100.0f;
@@ -72,6 +75,7 @@ public class Character : MonoBehaviour {
         GameData.Instance.state = GameData.GameState.Playing;
         yield return new WaitForSeconds(GameData.Instance.StartDelay);
     }
+
 	// Update is called once per frame
 	void FixedUpdate () {
         if (!GameData.Instance.dead)
@@ -103,14 +107,17 @@ public class Character : MonoBehaviour {
 
         playerVel = gameObject.GetComponent<Rigidbody>().velocity.magnitude;
     }
+
+    
+
     void OnCollisionEnter(Collision col)
     {
-        if (col.relativeVelocity.magnitude > 0.2f * maxVel)
+        if (col.relativeVelocity.magnitude > 0.2f * maxVel && !col.collider.CompareTag("Boundary"))
         {
             SoundManager.playRandSound(impact,SoundManager.Instance.impact);
         }
 
-        if (col.other.CompareTag("Ground"))
+        if (col.collider.CompareTag("Ground"))
         {
             float factor = col.relativeVelocity.y;
             GameData.Instance.score += (int)(baseScore * factor) * GameData.Instance.Multi;
@@ -150,9 +157,12 @@ public class Character : MonoBehaviour {
             bloomF.enabled = true;
             colCorr.enabled = true;
 
-            StartCoroutine(Overdosing());
+            if(!isOverdosing)
+                StartCoroutine(Overdosing());
             StartCoroutine(ODEffect());
             StopCoroutine(ODFadeOut());
+
+            isOverdosing = true;
         }
     }
 
@@ -162,8 +172,8 @@ public class Character : MonoBehaviour {
         yield return new WaitForSeconds(overdoseStepDur);
         if(GameData.Instance.overdose > 0)
         {
-            GameData.Instance.overdose -= 10;
-            GameData.Instance.health -= 5.0f;
+            GameData.Instance.overdose -= overdoseLossStep;
+            GameData.Instance.health -= overdoseHealthStep;
             StartCoroutine(Overdosing());
         } else
         {
@@ -176,6 +186,7 @@ public class Character : MonoBehaviour {
 
             StartCoroutine(ODFadeOut());
             StopCoroutine(ODEffect());
+            isOverdosing = false;
         }
     }
 
@@ -218,28 +229,6 @@ public class Character : MonoBehaviour {
                 GameData.Instance.score -= (int)(deathNegScore * GameData.Instance.health);
             }
             GameData.Instance.dead = true;
-        }
-        /*GameData.highscoreEntry[] hscores = GameData.Instance.highscores;
-        sortHighscores(hscores);
-        if(hscores[hscores.Length-1].score < GameData.Instance.score)
-        {
-            //enter new score there and prompt for name...
-        }*/
-    }
-
-    private void sortHighscores(GameData.HighscoreEntry[] hs)
-    {
-        for(int i = 0; i < hs.Length; i++)
-        {
-            for(int j = 0; j < hs.Length; j++)
-            {
-                if(hs[j].score > hs[i].score)
-                {
-                    GameData.HighscoreEntry tmp = hs[i];
-                    hs[i] = hs[j];
-                    hs[j] = tmp;
-                }
-            }
         }
     }
 }

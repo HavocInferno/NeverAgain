@@ -26,7 +26,8 @@ public class ClampSpeed : MonoBehaviour {
 	}
     void OnCollisionEnter(Collision col)
     {
-
+        if (!col.collider.CompareTag("Player") && !col.collider.CompareTag("Boundary"))
+        {
             if (col.relativeVelocity.magnitude > 0.1f * maxspeed)
                 SoundManager.playRandSound(impact, SoundManager.Instance.impact);
 
@@ -41,12 +42,11 @@ public class ClampSpeed : MonoBehaviour {
                 else
                     SoundManager.playRandSound(bone, SoundManager.Instance.bone);
             }
-        
-        
+        }
     }
 	IEnumerator jump()
 	{
 		yield return new WaitForSeconds (0.5f);
-		rb.AddForce (transform.up * 100, ForceMode.Impulse);
+		rb.AddForce (transform.up * -80 + transform.forward * -40, ForceMode.Impulse);
 	}
 }

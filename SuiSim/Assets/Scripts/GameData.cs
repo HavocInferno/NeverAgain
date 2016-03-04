@@ -19,10 +19,16 @@ public class GameData: MonoBehaviour {
         set {
             Debug.Log(UnityEngine.StackTraceUtility.ExtractStackTrace() + " "+ value.ToString());
             if (State == GameState.Playing)
+            {
                 playerMuppet.SetActive(true);
+                Camera.main.transform.GetChild(0).gameObject.SetActive(false);
+            }
             State = value;
             if (State == GameState.Playing)
+            {
                 playerMuppet.SetActive(false);
+                Camera.main.transform.GetChild(0).gameObject.SetActive(true);
+            }
         }
     }
     public ArrayList choppaz = new ArrayList();
@@ -60,7 +66,13 @@ public class GameData: MonoBehaviour {
     public float health
     {
         get { return HP; }
-        set { HP = value; while (HP <= 0 && !Dead) { HP += 100.0f; overkillMulti++; }; GameUI.UIes.health = (int)(HP * 10.0f); }
+        set { HP = value;
+            while (HP <= 0 && !Dead) {
+                HP += 100.0f; overkillMulti++;
+            }
+            if (HP > 100.0f)
+                HP = 100.0f;
+            GameUI.UIes.health = (int)(HP * 10.0f); }
     }
 
     private int Score;
@@ -81,6 +93,11 @@ public class GameData: MonoBehaviour {
             {
                 GameUI.UIes.OverKillText.transform.localScale = new Vector3(2, 2, 2);
                 GameUI.UIes.OverKillText.SetActive(true);
+                if (overkillMulti % 5 == 0)
+                    GameUI.UIes.OverKillText.GetComponent<AudioSource>().clip = SoundManager.Instance.overkillSpecial[0];
+                else
+                    GameUI.UIes.OverKillText.GetComponent<AudioSource>().clip = SoundManager.Instance.overkill[0];
+                GameUI.UIes.OverKillText.GetComponent<AudioSource>().Play();
             }
         }
     }
