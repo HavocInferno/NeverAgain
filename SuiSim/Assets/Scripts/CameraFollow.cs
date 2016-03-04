@@ -25,6 +25,8 @@ public class CameraFollow : MonoBehaviour {
     void Start()
     {
         initRot = transform.localRotation;
+        if (followedObject == null)
+            setFollow(GameData.Instance.spawnPosition); //dummy, until first player is spawned
         StartCoroutine(Rd());
         followrotation = transform.rotation;
     }
@@ -71,7 +73,9 @@ public class CameraFollow : MonoBehaviour {
     {
         while (true)
         {
-            float factor = followedObject.gameObject.GetComponent<Rigidbody>().velocity.magnitude / followedObject.GetComponent<Character>().maxVel;
+            float factor = 1.0f;
+            if (followedObject.GetComponent<Character>() != null)
+                factor = followedObject.gameObject.GetComponent<Rigidbody>().velocity.magnitude / followedObject.GetComponent<Character>().maxVel;
             angleX = factor * Random.Range(-0.3f, 0.3f);
             angleZ = factor * Random.Range(-0.3f, 0.3f);
             yield return new WaitForSeconds(Random.Range(0.1f, 0.05f));

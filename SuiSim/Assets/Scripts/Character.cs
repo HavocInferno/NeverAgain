@@ -27,6 +27,7 @@ public class Character : MonoBehaviour {
 
     public static float playerVel = 0.0f;
     public static Character playerInstance;
+    public GameObject playerObject;
 
     public int deathNegScore = 10;
     public int baseScore = 10;
@@ -44,7 +45,7 @@ public class Character : MonoBehaviour {
         StartCoroutine(start());
         rb = gameObject.GetComponent<Rigidbody>();
         if (statdir == null)
-            statdir = directions;
+            statdir = GameData.Instance.dirHelper;
         if (directions == null)
             directions = statdir;
         initVolume = wind.volume;

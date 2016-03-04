@@ -13,6 +13,9 @@ public class GameData: MonoBehaviour {
     private bool first = true;
     [SerializeField]
     private GameObject firstplayer;
+
+    public Transform dirHelper;
+
     public GameState state
     {
         get { return State; }
@@ -132,16 +135,17 @@ public class GameData: MonoBehaviour {
 
     public void spawnPlayer()
     {
-        if (first)
+        /*if (first)
         {
             first = false;
             firstplayer.SetActive(true);
         }
         else
-        {
-            Destroy(Character.playerInstance);
+        {*/
+            if(Character.playerInstance != null)
+                Destroy(Character.playerInstance.playerObject);
             Instantiate(playerPrefab, spawnPosition.position, spawnPosition.rotation);
-        }
+        //}
         reset();
     }
     public void reset()
