@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class CameraFollow : MonoBehaviour {
@@ -31,17 +31,17 @@ public class CameraFollow : MonoBehaviour {
         followrotation = transform.rotation;
     }
 
-    void LateUpdate()
+    void FixedUpdate()
     {
         if (GameData.Instance.state == GameData.GameState.Playing)
         {
             smooth2 = Mathf.Lerp(smooth2, smooth, Time.deltaTime*0.4f);
-            transform.rotation = Quaternion.Lerp(transform.rotation, followrotation, Time.deltaTime * smooth2);
-            GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, gameFOV, Time.deltaTime*smooth2);
+            transform.rotation = Quaternion.Lerp(transform.rotation, followrotation, Time.fixedDeltaTime * smooth2);
+			GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, gameFOV, Time.fixedDeltaTime*smooth2);
             toPosition = followedObject.position + Vector3.up * distanceUp - followedObject.forward * distanceAway;
-            transform.position = Vector3.Lerp(transform.position, toPosition, Time.deltaTime * smooth2);
+			transform.position = Vector3.Lerp(transform.position, toPosition, Time.fixedDeltaTime * smooth2);
             transform.Rotate(Vector3.up * angleZ + Vector3.right * angleX);
-            transform.localRotation = Quaternion.Lerp(transform.localRotation, initRot, Time.deltaTime * 2.0f);
+			transform.localRotation = Quaternion.Lerp(transform.localRotation, initRot, Time.fixedDeltaTime * 2.0f);
             GetComponent<Camera>().nearClipPlane = .5f;
         }
         else
@@ -50,18 +50,18 @@ public class CameraFollow : MonoBehaviour {
             {
 
                 smooth2 = 1.5f;
-                GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, menuFOV, Time.deltaTime*smooth2);
-                transform.position = Vector3.Lerp(transform.position, spawnPosition.position, Time.deltaTime * smooth2);
-                transform.rotation = Quaternion.Slerp(transform.rotation, spawnPosition.rotation, Time.deltaTime * smooth2);
+				GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, menuFOV, Time.fixedDeltaTime*smooth2);
+				transform.position = Vector3.Lerp(transform.position, spawnPosition.position, Time.fixedDeltaTime * smooth2);
+				transform.rotation = Quaternion.Slerp(transform.rotation, spawnPosition.rotation, Time.fixedDeltaTime * smooth2);
                 GetComponent<Camera>().nearClipPlane = .1f;
             }
             if (GameData.Instance.state == GameData.GameState.Stats)
             {
 
                 smooth2 = 1.5f;
-                GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, menuFOV, Time.deltaTime * smooth2/4.0f);
-                transform.position = Vector3.Lerp(transform.position, spawnPosition.position, Time.deltaTime * smooth2 / 4.0f);
-                transform.rotation = Quaternion.Slerp(transform.rotation, spawnPosition.rotation, Time.deltaTime * smooth2 / 4.0f);
+				GetComponent<Camera>().fov = Mathf.Lerp(GetComponent<Camera>().fov, menuFOV, Time.fixedDeltaTime * smooth2/4.0f);
+				transform.position = Vector3.Lerp(transform.position, spawnPosition.position, Time.fixedDeltaTime * smooth2 / 4.0f);
+				transform.rotation = Quaternion.Slerp(transform.rotation, spawnPosition.rotation, Time.fixedDeltaTime * smooth2 / 4.0f);
                 GetComponent<Camera>().nearClipPlane = .1f;
             }
 

@@ -60,7 +60,7 @@ public class Character : MonoBehaviour {
         GameData.Instance.dead = false;
         Camera.main.GetComponent<CameraFollow>().setFollow(gameObject.transform);
 
-        StartCoroutine(overdoseDecay());
+       // StartCoroutine(overdoseDecay());
 		StartCoroutine(ambientW());
 	}
 
@@ -93,7 +93,12 @@ public class Character : MonoBehaviour {
         if (rb.velocity.magnitude > maxVel)
             rb.velocity = rb.velocity.normalized * maxVel;
 
-        if(odEffect)
+		float cA = 2.0f;
+		if(odEffect)
+			cA += (GameData.Instance.overDoseMulti - 1) * 20f * Mathf.Sin (Time.time*GameData.Instance.overDoseMulti);
+		chromAb.chromaticAberration = Mathf.Lerp(chromAb.chromaticAberration, cA, Time.deltaTime * 10.0f);
+       /* 
+        * if(odEffect)
         {
             if(!fadeOut) //during
             {
@@ -103,6 +108,7 @@ public class Character : MonoBehaviour {
                 chromAb.chromaticAberration = Mathf.Lerp(chromAb.chromaticAberration, 2.0f, Time.deltaTime * 4.0f);
             }
         }
+        */
 
         wind.volume = gameObject.GetComponent<Rigidbody>().velocity.magnitude / maxVel * initVolume;
 
@@ -137,6 +143,8 @@ public class Character : MonoBehaviour {
 
             }
             SoundManager.playRandSound(penice.GetComponents<AudioSource>()[3], SoundManager.Instance.brain);
+
+			setODEffect(false);
             GameData.Instance.winLose();
         }
     }
@@ -144,6 +152,7 @@ public class Character : MonoBehaviour {
 
     public void DoOverdose(int od, float heal)
     {
+		throw new UnityException();
         GameData.Instance.overdose += od;
         GameData.Instance.health += heal;
 
@@ -166,6 +175,13 @@ public class Character : MonoBehaviour {
             isOverdosing = true;
         }
     }
+
+	public void setODEffect(bool val)
+	{
+		bloomF.enabled = val;
+		colCorr.enabled = val;
+		odEffect = val;
+	}
 
     IEnumerator Overdosing()
     {
@@ -213,9 +229,10 @@ public class Character : MonoBehaviour {
     {
         while (true)
         {
-            yield return new WaitForSeconds(2.0f);
+            yield return new WaitForSeconds(.1f);
             if (!odEffect && GameData.Instance.overdose > 0)
                 GameData.Instance.overdose--;
+
         }
     }
 

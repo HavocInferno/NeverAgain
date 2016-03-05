@@ -13,7 +13,9 @@ public class GameData: MonoBehaviour {
     private bool first = true;
     [SerializeField]
     private GameObject firstplayer;
-
+	public float overdoseThreshold = 100f;
+	public float overdoseFalloff = 10;
+	public float overdoseDamage = 10.0f;
     public Transform dirHelper;
 
     public GameState state
@@ -32,8 +34,25 @@ public class GameData: MonoBehaviour {
                 playerMuppet.SetActive(false);
                 Camera.main.transform.GetChild(0).gameObject.SetActive(true);
             }
+
         }
     }
+	void Start()
+	{
+		Debug.LogError("Penis");
+		StartCoroutine (overDose ());
+	}
+	IEnumerator overDose()
+	{
+		while (true) {
+			yield return new WaitForSeconds(1.0f/overdoseFalloff);
+			if(overdose>0)
+			{
+				overdose --;
+				health-= ((overDoseMulti-1)/overdoseFalloff)*overdoseDamage;
+			}
+		}
+	}
     public ArrayList choppaz = new ArrayList();
     public float StartDelay;
 
@@ -86,12 +105,11 @@ public class GameData: MonoBehaviour {
     }
 
     private int okM=1;
-    private int odM=1;
     public int overkillMulti
     {
         get { return okM; }
         set { okM = value; 
-            GameUI.UIes.Multi = okM*odM;
+			GameUI.UIes.Multi = overkillMulti * overDoseMulti;
             if (value > 1)
             {
                 GameUI.UIes.OverKillText.transform.localScale = new Vector3(2, 2, 2);
@@ -106,20 +124,39 @@ public class GameData: MonoBehaviour {
     }
     public int Multi
     {
-        get { return okM * odM; }
+        get { return overkillMulti * overDoseMulti; }
     }
-    public int overDoseMulti
-    {
-        get { return odM; }
-        set { odM = value; GameUI.UIes.Multi = okM*odM; }
-    }
+
+
+	
+
 
     private int Overdose;
     public int overdose
     {
         get { return Overdose; }
-        set { Overdose = value; GameUI.UIes.Overdose = Overdose; }
+        set 
+		{ 
+			GameUI.UIes.Overdose = value; 
+			overDoseMulti = 1 + (int)(value/overdoseThreshold);
+			overDoseBool = (value>=overdoseThreshold);
+			Overdose = value; 
+		}
     }
+	public int overDoseMulti
+	{
+		get { return 1 + (int)(Overdose/overdoseThreshold); }
+		set { GameUI.UIes.Multi = okM*value; }
+	}
+	public bool overDoseBool
+	{
+		get{ return (Overdose>=overdoseThreshold); }
+		set
+		{
+		GameUI.UIes.OverdoseBool = value;
+		Character.playerInstance.setODEffect(value);
+		}
+	}
 
     public class HighscoreEntry
     {

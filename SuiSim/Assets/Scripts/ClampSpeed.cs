@@ -14,7 +14,7 @@ public class ClampSpeed : MonoBehaviour {
         rb = GetComponent<Rigidbody>();
         bone = GetComponents<AudioSource>()[0];
         impact = GetComponents<AudioSource>()[1];
-		rb.interpolation = RigidbodyInterpolation.Interpolate;
+		rb.interpolation = RigidbodyInterpolation.None;
 		if (head) {
 			StartCoroutine(jump ());
 		}

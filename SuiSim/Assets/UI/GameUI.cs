@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 
 public class GameUI : MonoBehaviour {
-    public Text score1, score2, overdose1, overdose2, multi1, multi2;
+    public Text score1, score2, overdose1, overdose2, multi1, multi2; 
     public Text[] Highscores;
     private int textsize;
     private int score;
@@ -11,6 +11,7 @@ public class GameUI : MonoBehaviour {
     public Slider slides;
     public Slider odSlides;
     public GameObject odParts;
+	public Text  odText1, odText2;
     private bool imSpiel, overdoseBool;
     public GameObject hud;
     public GameObject menu;
@@ -211,14 +212,13 @@ public class GameUI : MonoBehaviour {
         }
         set
         {
-            overdose = value;
-            if(overdose < 1)
-            {
-                odParts.SetActive(false);
-            } else
-            {
-                odParts.SetActive(true);
-            }
+			string text = "Overdose";
+			if(GameData.Instance.overDoseBool)
+				text += " x"+GameData.Instance.overDoseMulti;
+			odText1.text = odText2.text = text;
+            overdose = (int) (value%GameData.Instance.overdoseThreshold);
+			odParts.SetActive(value>0);
+
         }
     }
     public bool OverdoseBool {
