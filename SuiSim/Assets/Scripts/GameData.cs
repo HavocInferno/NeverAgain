@@ -154,7 +154,8 @@ public class GameData: MonoBehaviour {
 		set
 		{
 		GameUI.UIes.OverdoseBool = value;
-		Character.playerInstance.setODEffect(value);
+            //check for playerInstance == null, if so set false?
+            Character.playerInstance.setODEffect(value);
 		}
 	}
 
